@@ -1,25 +1,56 @@
-import React, {Component} from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import ColorPicker from './components/ColorPicker';
+import SizeSetting from './components/SizeSetting'
+import Reset from './components/Reset';
+import Result from './components/Result';
 
 class App extends Component {
-  render(){
+  constructor(props) {
+    super(props);
+    this.state = {
+      color: 'red',
+      fontSize: 12
+    }
+    this.onReSizeClick = this.onReSizeClick.bind(this);
+  }
+  onPickerClick = (param) => {
+    this.setState({
+      color: param
+    });
+  }
+  onResetClick() {
+    this.setState({
+      color: 'red',
+      fontSize: 12
+    });
+  }
+  onReSizeClick(gt) {
+    if (this.state.fontSize <= 8 && gt < 0) {
+      return;
+    }
+    else if(this.state.fontSize >=16 && gt > 0){
+      return;
+    }
+    else {
+      this.setState({
+        fontSize: this.state.fontSize + gt
+      });
+    }
+  }
+  render() {
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://facebook.com/duy.15.5"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            My profile
-          </a>
-        </header>
+      <div className="container mt-5">
+        <div className="row">
+          <ColorPicker onPickerClick={this.onPickerClick} color={this.state.color} />
+          <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <SizeSetting onReSizeClick={this.onReSizeClick} fontSize={this.state.fontSize} />
+            <Reset onResetClick={(gt) => this.onResetClick(gt)} />
+          </div>
+          <Result color={this.state.color} fontSize={this.state.fontSize} />
+        </div>
+
       </div>
     );
   }
